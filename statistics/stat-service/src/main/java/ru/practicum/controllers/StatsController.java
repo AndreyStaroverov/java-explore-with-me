@@ -3,7 +3,7 @@ package ru.practicum.controllers;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
-import ru.practicum.dto.HitDto;
+import ru.practicum.HitDto;
 import ru.practicum.model.Hit;
 import ru.practicum.model.ViewStats;
 import ru.practicum.service.HitService;

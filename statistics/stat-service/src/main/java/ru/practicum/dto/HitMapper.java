@@ -1,5 +1,6 @@
 package ru.practicum.dto;
 
+import ru.practicum.HitDto;
 import ru.practicum.model.Hit;
 
 import java.sql.Timestamp;

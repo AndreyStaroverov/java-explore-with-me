@@ -2,7 +2,7 @@ package ru.practicum.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import ru.practicum.dto.HitDto;
+import ru.practicum.HitDto;
 import ru.practicum.dto.HitMapper;
 import ru.practicum.model.Hit;
 import ru.practicum.model.ViewStats;
