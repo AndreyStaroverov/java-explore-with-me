@@ -24,7 +24,7 @@ public class HitService {
     }
 
     public Hit saveHit(HitDto hit) {
-        return hitRepository.save(HitMapper.DtoToHit(hit));
+        return hitRepository.save(HitMapper.dtoToHit(hit));
     }
 
     public Collection<ViewStats> getStats(String start, String end, Collection<String> uris, Boolean unique) {
