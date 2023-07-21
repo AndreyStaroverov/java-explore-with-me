@@ -8,7 +8,6 @@ import ru.practicum.model.Hit;
 import ru.practicum.model.ViewStats;
 import ru.practicum.repository.HitRepository;
 
-import java.net.URI;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -28,7 +27,7 @@ public class HitService {
         return hitRepository.save(HitMapper.dtoToHit(hit));
     }
 
-    public Collection<ViewStats> getStats(String start, String end, Collection<URI> uris, Boolean unique) {
+    public Collection<ViewStats> getStats(String start, String end, Collection<String> uris, Boolean unique) {
         if (uris == null) {
             return emptyUris(start, end, unique);
         }
@@ -41,12 +40,12 @@ public class HitService {
 
     private Collection<ViewStats> emptyUris(String start, String end, Boolean unique) {
         Collection<ViewStats> viewStats = new ArrayList<>();
-        Collection<URI> uris = hitRepository.findAllForEmptyUris();
-        for (URI string : uris) {
+        Collection<String> uris = hitRepository.findAllForEmptyUris();
+        for (String uri : uris) {
             viewStats.add(new ViewStats(
                     "service",
-                    string,
-                    hitRepository.findAllByUri(string, Timestamp.valueOf(start), Timestamp.valueOf(end))
+                    uri,
+                    hitRepository.findAllByUri(uri, Timestamp.valueOf(start), Timestamp.valueOf(end))
             ));
         }
         return viewStats.stream()
@@ -54,13 +53,13 @@ public class HitService {
                 .collect(Collectors.toList());
     }
 
-    public Collection<ViewStats> uniqueStats(String start, String end, Collection<URI> uris, Boolean unique) {
+    public Collection<ViewStats> uniqueStats(String start, String end, Collection<String> uris, Boolean unique) {
         Collection<ViewStats> viewStats = new ArrayList<>();
-        for (URI string : uris) {
+        for (String uri : uris) {
             viewStats.add(new ViewStats(
                     "service",
-                    string,
-                    hitRepository.findAllByUriUnique(string, Timestamp.valueOf(start), Timestamp.valueOf(end))
+                    uri,
+                    hitRepository.findAllByUriUnique(uri, Timestamp.valueOf(start), Timestamp.valueOf(end))
             ));
         }
         return viewStats.stream()
@@ -68,13 +67,13 @@ public class HitService {
                 .collect(Collectors.toList());
     }
 
-    public Collection<ViewStats> notUniqueStats(String start, String end, Collection<URI> uris, Boolean unique) {
+    public Collection<ViewStats> notUniqueStats(String start, String end, Collection<String> uris, Boolean unique) {
         Collection<ViewStats> viewStats = new ArrayList<>();
-        for (URI string : uris) {
+        for (String uri : uris) {
             viewStats.add(new ViewStats(
                     "service",
-                    string,
-                    hitRepository.findAllByUri(string, Timestamp.valueOf(start), Timestamp.valueOf(end))
+                    uri,
+                    hitRepository.findAllByUri(uri, Timestamp.valueOf(start), Timestamp.valueOf(end))
             ));
         }
         return viewStats.stream()
