@@ -8,6 +8,7 @@ import ru.practicum.model.Hit;
 import ru.practicum.model.ViewStats;
 import ru.practicum.service.HitService;
 
+import java.net.URI;
 import java.util.Collection;
 
 @RestController
@@ -29,7 +30,7 @@ public class StatsController {
     @ResponseStatus(HttpStatus.OK)
     public Collection<ViewStats> getStats(@RequestParam(value = "start", required = true) String start,
                                           @RequestParam(value = "end", required = true) String end,
-                                          @RequestParam(value = "uris", required = false) Collection<String> uris,
+                                          @RequestParam(value = "uris", required = false) Collection<URI> uris,
                                           @RequestParam(value = "unique", required = false, defaultValue = "false") Boolean unique) {
         return hitService.getStats(start, end, uris, unique);
     }

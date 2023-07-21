@@ -6,6 +6,7 @@ import lombok.NoArgsConstructor;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Positive;
+import java.net.URI;
 
 @Data
 @AllArgsConstructor
@@ -15,7 +16,7 @@ public class ViewStats {
     @NotBlank
     private String app;
     @NotBlank
-    private String uri;
+    private URI uri;
     @Positive
     private Long hits;
 }
