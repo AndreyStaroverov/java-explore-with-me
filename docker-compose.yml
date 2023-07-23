@@ -1,15 +1,58 @@
 version: '3.1'
 services:
   stats-server:
+    build: statistics/stat-service
+    image: ewm-stat-service
+    container_name: stat-service
     ports:
       - "9090:9090"
+    depends_on:
+      - stats-db
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://stats-db:5432/explore
+      - SPRING_DATASOURCE_USERNAME=postgres
+      - SPRING_DATASOURCE_PASSWORD=norman123
+    volumes:
+      - "/etc/localtime:/etc/localtime:ro"
+      - "/etc/timezone:/etc/timezone:ro"
 
   stats-db:
     image: postgres:14-alpine
+    container_name: stats-db
+    volumes:
+      - "/etc/localtime:/etc/localtime:ro"
+      - "/etc/timezone:/etc/timezone:ro"
+    ports:
+      - "6541:5432"
+    environment:
+      - POSTGRES_DB=explore
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=norman123
 
   ewm-service:
+    build: main-service
+    container_name: main-service
     ports:
       - "8080:8080"
+    depends_on:
+      - ewm-db
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://ewm-db:5433/ewmmain
+      - SPRING_DATASOURCE_USERNAME=postgres
+      - SPRING_DATASOURCE_PASSWORD=norman123
+    volumes:
+      - "/etc/localtime:/etc/localtime:ro"
+      - "/etc/timezone:/etc/timezone:ro"
 
   ewm-db:
     image: postgres:14-alpine
+    container_name: ewm-db
+    volumes:
+      - "/etc/localtime:/etc/localtime:ro"
+      - "/etc/timezone:/etc/timezone:ro"
+    ports:
+      - "6542:5433"
+    environment:
+      - POSTGRES_DB=ewmmain
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=norman123
