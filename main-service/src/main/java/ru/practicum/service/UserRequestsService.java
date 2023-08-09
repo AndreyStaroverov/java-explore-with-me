@@ -55,8 +55,9 @@ public class UserRequestsService {
         if (eventsRepository.getReferenceById(eventId).getInitiator().getId() == userId) {
             throw new ConflictStateException("Cant change your event");
         }
-        if (eventsRepository.getReferenceById(eventId).getConf_req() == eventsRepository.getReferenceById(eventId).getPart_limit()
-                && eventsRepository.getReferenceById(eventId).getPart_limit() != 0L) {
+        if (eventsRepository.getReferenceById(eventId).getConfirmedRequests()
+                == eventsRepository.getReferenceById(eventId).getParticipantLimit()
+                && eventsRepository.getReferenceById(eventId).getParticipantLimit() != 0L) {
             throw new ConflictStateException("Part_Limit conflict");
         }
 
@@ -66,16 +67,16 @@ public class UserRequestsService {
         if (!eventsRepository.getReferenceById(eventId).getRequestModeration()) {
             userRequest.setStatus(RequestStates.CONFIRMED.toString());
             Event event = eventsRepository.getReferenceById(eventId);
-            Long confReq = event.getConf_req();
-            event.setConf_req(++confReq);
+            Long confReq = event.getConfirmedRequests();
+            event.setConfirmedRequests(++confReq);
             eventsRepository.save(event);
             return MapperUserRequests.toPartReqDto(userRequestRepository.save(userRequest));
         }
-        if (eventsRepository.getReferenceById(eventId).getPart_limit() == 0) {
+        if (eventsRepository.getReferenceById(eventId).getParticipantLimit() == 0) {
             userRequest.setStatus(RequestStates.CONFIRMED.toString());
             Event event = eventsRepository.getReferenceById(eventId);
-            Long confReq = event.getConf_req();
-            event.setConf_req(++confReq);
+            Long confReq = event.getConfirmedRequests();
+            event.setConfirmedRequests(++confReq);
             eventsRepository.save(event);
             return MapperUserRequests.toPartReqDto(userRequestRepository.save(userRequest));
         }

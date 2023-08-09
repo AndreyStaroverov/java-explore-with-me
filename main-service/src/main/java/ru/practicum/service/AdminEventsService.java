@@ -81,7 +81,7 @@ public class AdminEventsService {
             if (Timestamp.valueOf(updateEventAdminRequest.getEventDate()).before(Timestamp.from(Instant.now()))) {
                 throw new BadRequestDate("Date is before");
             }
-            event.setEvent_date(Timestamp.valueOf(updateEventAdminRequest.getEventDate()));
+            event.setEventDate(Timestamp.valueOf(updateEventAdminRequest.getEventDate()));
         }
         if (updateEventAdminRequest.getLocation() != null) {
             event.setLocation(locationRepository.save(updateEventAdminRequest.getLocation()));
@@ -90,7 +90,7 @@ public class AdminEventsService {
             event.setPaid(updateEventAdminRequest.getPaid());
         }
         if (updateEventAdminRequest.getParticipantLimit() != null) {
-            event.setPart_limit(updateEventAdminRequest.getParticipantLimit().longValue());
+            event.setParticipantLimit(updateEventAdminRequest.getParticipantLimit().longValue());
         }
         if (updateEventAdminRequest.getRequestModeration() != null) {
             event.setRequestModeration(updateEventAdminRequest.getRequestModeration());
@@ -114,7 +114,7 @@ public class AdminEventsService {
     }
 
     public void checkTime(Long eventId) {
-        LocalDateTime eventDate = eventsRepository.getReferenceById(eventId).getEvent_date().toLocalDateTime();
+        LocalDateTime eventDate = eventsRepository.getReferenceById(eventId).getEventDate().toLocalDateTime();
         LocalDateTime published = Timestamp.from(Instant.now()).toLocalDateTime();
         Duration duration = Duration.between(eventDate, published);
         if (duration.toMinutes() <= 60) {

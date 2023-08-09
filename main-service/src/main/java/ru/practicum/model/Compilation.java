@@ -23,8 +23,6 @@ public class Compilation {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    //    @ManyToMany
-//    @JoinColumn(name = "event_id")
     @ManyToMany(cascade = CascadeType.ALL)
     @JoinTable(name = "compilations_events",
             joinColumns = @JoinColumn(name = "compilation_id", referencedColumnName = "id"),

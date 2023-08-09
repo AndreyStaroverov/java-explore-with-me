@@ -15,12 +15,12 @@ import java.util.List;
 public class MapperUserEvents {
 
     public static EventShortDto toEventShortDto(Event event) {
-        String date = event.getEvent_date().toLocalDateTime().toString().replace("T", " ");
+        String date = event.getEventDate().toLocalDateTime().toString().replace("T", " ");
         return new EventShortDto(
                 event.getId(),
                 event.getAnnotation(),
                 event.getCategory(),
-                event.getConf_req(),
+                event.getConfirmedRequests(),
                 event.getDescription(),
                 date,
                 new UserShortDto(event.getInitiator().getId(), event.getInitiator().getName()),
@@ -33,12 +33,12 @@ public class MapperUserEvents {
     public static Collection<EventShortDto> toEventShortDtoColl(Collection<Event> events) {
         Collection<EventShortDto> eventShortDtos = new ArrayList<>();
         for (Event event : events) {
-            String date = event.getEvent_date().toLocalDateTime().toString().replace("T", " ");
+            String date = event.getEventDate().toLocalDateTime().toString().replace("T", " ");
             eventShortDtos.add(new EventShortDto(
                     event.getId(),
                     event.getAnnotation(),
                     event.getCategory(),
-                    event.getConf_req(),
+                    event.getConfirmedRequests(),
                     event.getDescription(),
                     date,
                     new UserShortDto(event.getInitiator().getId(), event.getInitiator().getName()),
@@ -54,7 +54,7 @@ public class MapperUserEvents {
         Collection<EventShortDtoGet> eventShortDtos = new ArrayList<>();
         for (Event event : events) {
             eventShortDtos.add(EventShortDtoGet.builder()
-                    .eventDate(event.getEvent_date().toLocalDateTime())
+                    .eventDate(event.getEventDate().toLocalDateTime())
                     .annotation(event.getAnnotation())
                     .category(event.getCategory())
                     .id(event.getId())
@@ -71,13 +71,13 @@ public class MapperUserEvents {
                 .annotation(newEventDto.getAnnotation())
                 .category(category)
                 .description(newEventDto.getDescription())
-                .event_date(Timestamp.valueOf(newEventDto.getEventDate()))
-                .conf_req(0L)
+                .eventDate(Timestamp.valueOf(newEventDto.getEventDate()))
+                .confirmedRequests(0L)
                 .initiator(initiator)
                 .location(newEventDto.getLocation())
                 .createdOn(Timestamp.from(Instant.now()))
                 .paid(newEventDto.getPaid())
-                .part_limit(newEventDto.getParticipantLimit().longValue())
+                .participantLimit(newEventDto.getParticipantLimit().longValue())
                 .requestModeration(newEventDto.getRequestModeration())
                 .state(EventStates.PENDING.toString())
                 .title(newEventDto.getTitle())
@@ -85,19 +85,19 @@ public class MapperUserEvents {
     }
 
     public static EventDto toEventFullPost(Event event) {
-        String date = event.getEvent_date().toLocalDateTime().toString().replace("T", " ");
+        String date = event.getEventDate().toLocalDateTime().toString().replace("T", " ");
         return EventDto.builder()
                 .id(event.getId())
                 .annotation(event.getAnnotation())
                 .category(event.getCategory())
-                .confirmedRequests(event.getConf_req())
+                .confirmedRequests(event.getConfirmedRequests())
                 .createdOn(event.getCreatedOn().toString())
                 .description(event.getDescription())
                 .eventDate(date)
                 .initiator(new UserShortDto(event.getInitiator().getId(), event.getInitiator().getName()))
                 .location(event.getLocation())
                 .paid(event.getPaid())
-                .participantLimit(event.getPart_limit().intValue())
+                .participantLimit(event.getParticipantLimit().intValue())
                 .requestModeration(event.getRequestModeration())
                 .state(event.getState())
                 .title(event.getTitle())
@@ -106,19 +106,19 @@ public class MapperUserEvents {
     }
 
     public static EventDto toEventFull(Event event) {
-        String date = event.getEvent_date().toLocalDateTime().toString().replace("T", " ");
+        String date = event.getEventDate().toLocalDateTime().toString().replace("T", " ");
         return EventDto.builder()
                 .id(event.getId())
                 .annotation(event.getAnnotation())
                 .category(event.getCategory())
-                .confirmedRequests(event.getConf_req())
+                .confirmedRequests(event.getConfirmedRequests())
                 .createdOn(event.getCreatedOn().toString())
                 .description(event.getDescription())
                 .eventDate(date)
                 .initiator(new UserShortDto(event.getInitiator().getId(), event.getInitiator().getName()))
                 .location(event.getLocation())
                 .paid(event.getPaid())
-                .participantLimit(event.getPart_limit().intValue())
+                .participantLimit(event.getParticipantLimit().intValue())
                 .publishedOn("" + event.getPublishedOn() + "")
                 .requestModeration(event.getRequestModeration())
                 .state(event.getState())
@@ -130,19 +130,19 @@ public class MapperUserEvents {
     public static Collection<EventDto> toEventFullColl(List<Event> events) {
         List<EventDto> eventDtos = new ArrayList<>();
         for (Event event : events) {
-            String date = event.getEvent_date().toLocalDateTime().toString().replace("T", " ");
+            String date = event.getEventDate().toLocalDateTime().toString().replace("T", " ");
             eventDtos.add(EventDto.builder()
                     .id(event.getId())
                     .annotation(event.getAnnotation())
                     .category(event.getCategory())
-                    .confirmedRequests(event.getConf_req())
+                    .confirmedRequests(event.getConfirmedRequests())
                     .createdOn(event.getCreatedOn().toString())
                     .description(event.getDescription())
                     .eventDate(date)
                     .initiator(new UserShortDto(event.getInitiator().getId(), event.getInitiator().getName()))
                     .location(event.getLocation())
                     .paid(event.getPaid())
-                    .participantLimit(event.getPart_limit().intValue())
+                    .participantLimit(event.getParticipantLimit().intValue())
                     .publishedOn("" + event.getPublishedOn() + "")
                     .requestModeration(event.getRequestModeration())
                     .state(event.getState())

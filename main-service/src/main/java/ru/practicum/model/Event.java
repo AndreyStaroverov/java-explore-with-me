@@ -28,13 +28,13 @@ public class Event {
     @JoinColumn(name = "category_id")
     private Category category;
     @Column(name = "conf_req", nullable = false)
-    private Long conf_req;
+    private Long confirmedRequests;
     @Column(name = "created", nullable = false)
     private Timestamp createdOn;
     @Column(name = "description", nullable = false)
     private String description;
     @Column(name = "event_date", nullable = false)
-    private Timestamp event_date;
+    private Timestamp eventDate;
     @ManyToOne
     @JoinColumn(name = "initiator_id")
     private User initiator;
@@ -44,7 +44,7 @@ public class Event {
     @Column(name = "paid", nullable = false)
     private Boolean paid;
     @Column(name = "part_limit", nullable = false)
-    private Long part_limit;
+    private Long participantLimit;
     @Column(name = "published", nullable = false)
     private Timestamp publishedOn;
     @Column(name = "req_moderation", nullable = false)

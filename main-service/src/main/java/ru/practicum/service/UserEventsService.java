@@ -105,7 +105,7 @@ public class UserEventsService {
                     .plusSeconds(7200)))) {
                 throw new BadRequestDate("Date is invalid");
             }
-            event.setEvent_date(Timestamp.valueOf(updateEventUserRequest.getEventDate()));
+            event.setEventDate(Timestamp.valueOf(updateEventUserRequest.getEventDate()));
         }
         if (updateEventUserRequest.getLocation() != null) {
             event.setLocation(locationRepository.save(updateEventUserRequest.getLocation()));
@@ -114,7 +114,7 @@ public class UserEventsService {
             event.setPaid(updateEventUserRequest.getPaid());
         }
         if (updateEventUserRequest.getParticipantLimit() != null) {
-            event.setPart_limit(updateEventUserRequest.getParticipantLimit().longValue());
+            event.setParticipantLimit(updateEventUserRequest.getParticipantLimit().longValue());
         }
         if (updateEventUserRequest.getRequestModeration() != null) {
             event.setRequestModeration(updateEventUserRequest.getRequestModeration());
@@ -144,10 +144,11 @@ public class UserEventsService {
                                                              EventRequestStatusUpdateRequest eventRequestStatusUpdateRequest) {
         checkEventAndUser(eventId, userId);
         if (eventsRepository.getReferenceById(eventId).getRequestModeration().equals(false) ||
-                eventsRepository.getReferenceById(eventId).getPart_limit().equals(0L)) {
+                eventsRepository.getReferenceById(eventId).getParticipantLimit().equals(0L)) {
             throw new BadRequestDate("Подтверждение не требуется");
         }
-        if (eventsRepository.getReferenceById(eventId).getConf_req() == eventsRepository.getReferenceById(eventId).getPart_limit()) {
+        if (eventsRepository.getReferenceById(eventId).getConfirmedRequests() ==
+                eventsRepository.getReferenceById(eventId).getParticipantLimit()) {
             throw new ConflictStateException("The participant limit has been reached");
         }
 
@@ -157,8 +158,8 @@ public class UserEventsService {
         updateResult.setConfirmedRequests(confirmedReq);
         updateResult.setRejectedRequests(rejectedReq);
 
-        Long partLimit = eventsRepository.getReferenceById(eventId).getPart_limit();
-        Long confReq = eventsRepository.getReferenceById(eventId).getConf_req();
+        Long partLimit = eventsRepository.getReferenceById(eventId).getParticipantLimit();
+        Long confReq = eventsRepository.getReferenceById(eventId).getConfirmedRequests();
         List<UserRequest> userRequests = userRequestRepository.findAllById(eventRequestStatusUpdateRequest.getRequestIds());
 
         for (UserRequest userRequest : userRequests) {
@@ -180,7 +181,7 @@ public class UserEventsService {
             }
         }
         Event event = eventsRepository.getReferenceById(eventId);
-        event.setConf_req(confReq);
+        event.setConfirmedRequests(confReq);
         eventsRepository.save(event);
         userRequestRepository.saveAll(userRequests);
         return updateResult;
