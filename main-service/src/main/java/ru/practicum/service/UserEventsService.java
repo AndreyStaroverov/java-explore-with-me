@@ -1,11 +1,16 @@
 package ru.practicum.service;
 
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
+import ru.practicum.StatClient;
+import ru.practicum.ViewStatsDto;
 import ru.practicum.dto.UserRequests.MapperUserRequests;
 import ru.practicum.dto.events.*;
 import ru.practicum.enums.EventStates;
@@ -19,9 +24,8 @@ import ru.practicum.repository.*;
 
 import java.sql.Timestamp;
 import java.time.Instant;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 public class UserEventsService {
@@ -31,13 +35,15 @@ public class UserEventsService {
     private final CategoryRepository categoryRepository;
     private final LocationRepository locationRepository;
     private final UserRequestRepository userRequestRepository;
+    private final StatClient statClient;
 
-    public UserEventsService(@Autowired EventsRepository eventsRepository, UserRepository userRepository, CategoryRepository categoryRepository, LocationRepository locationRepository, UserRequestRepository userRequestRepository) {
+    public UserEventsService(@Autowired EventsRepository eventsRepository, UserRepository userRepository, CategoryRepository categoryRepository, LocationRepository locationRepository, UserRequestRepository userRequestRepository, StatClient statClient) {
         this.eventsRepository = eventsRepository;
         this.userRepository = userRepository;
         this.categoryRepository = categoryRepository;
         this.locationRepository = locationRepository;
         this.userRequestRepository = userRequestRepository;
+        this.statClient = statClient;
     }
 
     @Transactional(isolation = Isolation.READ_COMMITTED, readOnly = true)
@@ -76,7 +82,10 @@ public class UserEventsService {
         if (!eventsRepository.getReferenceById(eventId).getInitiator().getId().equals(userId)) {
             throw new NotFoundException("Not your event");
         }
-        return MapperUserEvents.toEventFull(eventsRepository.getReferenceById(eventId));
+        List<Long> ids = new ArrayList<>();
+        ids.add(eventId);
+        Long views = getViews(ids).get(eventId);
+        return MapperUserEvents.toEventFull(eventsRepository.getReferenceById(eventId), views);
     }
 
     @Transactional(isolation = Isolation.READ_COMMITTED)
@@ -194,5 +203,33 @@ public class UserEventsService {
         if (!userRepository.existsById(userId)) {
             throw new NotFoundException(String.format("User with id=%s not exist", userId));
         }
+    }
+
+    public Map<Long, Long> getViews(List<Long> ids) {
+        List<String> uris = ids.stream().map(id -> "/events/" + id).collect(Collectors.toList());
+        String[] urisArray = uris.toArray(uris.toArray(new String[uris.size()]));
+
+        ResponseEntity<Object> response = statClient.getStats(Timestamp.from(Instant.ofEpochMilli(334638053)).toString(),
+                Timestamp.from(Instant.now()).toString(), urisArray, true);
+
+        Object responseBody = response.getBody();
+        ObjectMapper objectMapper = new ObjectMapper();
+
+        Collection<ViewStatsDto> viewStatsDtos =
+                objectMapper.convertValue(responseBody, new TypeReference<Collection<ViewStatsDto>>() {
+                });
+
+        assert viewStatsDtos != null;
+
+        Map<Long, Long> viewsMap = new HashMap<>();
+
+        for (ViewStatsDto viewStatsDto : viewStatsDtos) {
+            String str = viewStatsDto.getUri();
+            int lastIndex = str.lastIndexOf("/") + 1;
+            Long id = Long.parseLong(str.substring(lastIndex));
+            viewsMap.put(id, viewStatsDto.getHits());
+        }
+
+        return viewsMap;
     }
 }

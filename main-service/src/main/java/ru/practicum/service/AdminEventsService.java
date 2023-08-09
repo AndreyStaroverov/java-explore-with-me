@@ -1,17 +1,21 @@
 package ru.practicum.service;
 
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
+import ru.practicum.StatClient;
+import ru.practicum.ViewStatsDto;
 import ru.practicum.dto.events.EventDto;
 import ru.practicum.dto.events.MapperUserEvents;
 import ru.practicum.dto.events.UpdateEventAdminRequest;
 import ru.practicum.enums.EventStates;
 import ru.practicum.handler.BadRequestDate;
-import ru.practicum.handler.ConflictDateException;
 import ru.practicum.handler.ConflictStateException;
 import ru.practicum.handler.NotFoundException;
 import ru.practicum.model.Event;
@@ -20,12 +24,9 @@ import ru.practicum.repository.EventsRepository;
 import ru.practicum.repository.LocationRepository;
 
 import java.sql.Timestamp;
-import java.time.Duration;
 import java.time.Instant;
-import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 public class AdminEventsService {
@@ -33,11 +34,13 @@ public class AdminEventsService {
     private final EventsRepository eventsRepository;
     private final CategoryRepository categoryRepository;
     private final LocationRepository locationRepository;
+    private final StatClient statClient;
 
-    public AdminEventsService(@Autowired EventsRepository eventsRepository, CategoryRepository categoryRepository, LocationRepository locationRepository) {
+    public AdminEventsService(@Autowired EventsRepository eventsRepository, CategoryRepository categoryRepository, LocationRepository locationRepository, StatClient statClient) {
         this.eventsRepository = eventsRepository;
         this.categoryRepository = categoryRepository;
         this.locationRepository = locationRepository;
+        this.statClient = statClient;
     }
 
     @Transactional(isolation = Isolation.READ_COMMITTED, readOnly = true)
@@ -110,15 +113,37 @@ public class AdminEventsService {
         if (updateEventAdminRequest.getTitle() != null) {
             event.setTitle(updateEventAdminRequest.getTitle());
         }
-        return MapperUserEvents.toEventFull(eventsRepository.save(event));
+        List<Long> ids = new ArrayList<>();
+        ids.add(eventId);
+        Long views = getViews(ids).get(eventId);
+        return MapperUserEvents.toEventFull(eventsRepository.save(event), views);
     }
 
-    public void checkTime(Long eventId) {
-        LocalDateTime eventDate = eventsRepository.getReferenceById(eventId).getEventDate().toLocalDateTime();
-        LocalDateTime published = Timestamp.from(Instant.now()).toLocalDateTime();
-        Duration duration = Duration.between(eventDate, published);
-        if (duration.toMinutes() <= 60) {
-            throw new ConflictDateException("EventDate is so far");
+    public Map<Long, Long> getViews(List<Long> ids) {
+        List<String> uris = ids.stream().map(id -> "/events/" + id).collect(Collectors.toList());
+        String[] urisArray = uris.toArray(uris.toArray(new String[uris.size()]));
+
+        ResponseEntity<Object> response = statClient.getStats(Timestamp.from(Instant.ofEpochMilli(334638053)).toString(),
+                Timestamp.from(Instant.now()).toString(), urisArray, true);
+
+        Object responseBody = response.getBody();
+        ObjectMapper objectMapper = new ObjectMapper();
+
+        Collection<ViewStatsDto> viewStatsDtos =
+                objectMapper.convertValue(responseBody, new TypeReference<Collection<ViewStatsDto>>() {
+                });
+
+        assert viewStatsDtos != null;
+
+        Map<Long, Long> viewsMap = new HashMap<>();
+
+        for (ViewStatsDto viewStatsDto : viewStatsDtos) {
+            String str = viewStatsDto.getUri();
+            int lastIndex = str.lastIndexOf("/") + 1;
+            Long id = Long.parseLong(str.substring(lastIndex));
+            viewsMap.put(id, viewStatsDto.getHits());
         }
+
+        return viewsMap;
     }
 }

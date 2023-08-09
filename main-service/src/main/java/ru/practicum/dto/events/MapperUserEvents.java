@@ -14,7 +14,7 @@ import java.util.List;
 
 public class MapperUserEvents {
 
-    public static EventShortDto toEventShortDto(Event event) {
+    public static EventShortDto toEventShortDto(Event event, Long views) {
         String date = event.getEventDate().toLocalDateTime().toString().replace("T", " ");
         return new EventShortDto(
                 event.getId(),
@@ -26,7 +26,7 @@ public class MapperUserEvents {
                 new UserShortDto(event.getInitiator().getId(), event.getInitiator().getName()),
                 event.getPaid(),
                 event.getTitle(),
-                0L
+                views
         );
     }
 
@@ -105,7 +105,7 @@ public class MapperUserEvents {
                 .build();
     }
 
-    public static EventDto toEventFull(Event event) {
+    public static EventDto toEventFull(Event event, Long views) {
         String date = event.getEventDate().toLocalDateTime().toString().replace("T", " ");
         return EventDto.builder()
                 .id(event.getId())
@@ -123,7 +123,7 @@ public class MapperUserEvents {
                 .requestModeration(event.getRequestModeration())
                 .state(event.getState())
                 .title(event.getTitle())
-                .views(0L)
+                .views(views)
                 .build();
     }
 
