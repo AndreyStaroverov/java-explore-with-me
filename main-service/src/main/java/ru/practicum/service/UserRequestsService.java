@@ -52,11 +52,11 @@ public class UserRequestsService {
             throw new ConflictStateException("Only published events can be request from user");
         }
 
-        if (eventsRepository.getReferenceById(eventId).getInitiator().getId() == userId) {
+        if (eventsRepository.getReferenceById(eventId).getInitiator().getId().equals(userId)) {
             throw new ConflictStateException("Cant change your event");
         }
         if (eventsRepository.getReferenceById(eventId).getConfirmedRequests()
-                == eventsRepository.getReferenceById(eventId).getParticipantLimit()
+                .equals(eventsRepository.getReferenceById(eventId).getParticipantLimit())
                 && eventsRepository.getReferenceById(eventId).getParticipantLimit() != 0L) {
             throw new ConflictStateException("Part_Limit conflict");
         }

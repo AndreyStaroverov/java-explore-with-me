@@ -73,7 +73,7 @@ public class UserEventsService {
     @Transactional(isolation = Isolation.READ_COMMITTED, readOnly = true)
     public EventDto getEventById(Long userId, Long eventId) {
         checkEventAndUser(eventId, userId);
-        if (eventsRepository.getReferenceById(eventId).getInitiator().getId() != userId) {
+        if (!eventsRepository.getReferenceById(eventId).getInitiator().getId().equals(userId)) {
             throw new NotFoundException("Not your event");
         }
         return MapperUserEvents.toEventFull(eventsRepository.getReferenceById(eventId));
@@ -85,7 +85,7 @@ public class UserEventsService {
         if (eventsRepository.getReferenceById(eventId).getState().equals(EventStates.PUBLISHED.toString())) {
             throw new ConflictStateException("Status is PUBLISHED you can't update");
         }
-        if (eventsRepository.getReferenceById(eventId).getInitiator().getId() != userId) {
+        if (!eventsRepository.getReferenceById(eventId).getInitiator().getId().equals(userId)) {
             throw new NotFoundException(String.format("This event id=%s cant be patch by id=%s", eventId, userId));
         }
 
@@ -147,8 +147,8 @@ public class UserEventsService {
                 eventsRepository.getReferenceById(eventId).getParticipantLimit().equals(0L)) {
             throw new BadRequestDate("Подтверждение не требуется");
         }
-        if (eventsRepository.getReferenceById(eventId).getConfirmedRequests() ==
-                eventsRepository.getReferenceById(eventId).getParticipantLimit()) {
+        if (eventsRepository.getReferenceById(eventId).getConfirmedRequests()
+                .equals(eventsRepository.getReferenceById(eventId).getParticipantLimit())) {
             throw new ConflictStateException("The participant limit has been reached");
         }
 
@@ -166,7 +166,7 @@ public class UserEventsService {
             if (!userRequest.getStatus().equals(EventStates.PENDING.toString())) {
                 throw new ConflictStateException("Only request with PENDING status can be changed");
             }
-            if (confReq == partLimit) {
+            if (confReq.equals(partLimit)) {
                 userRequest.setStatus(RequestStates.REJECTED.toString());
                 updateResult.getRejectedRequests().add(MapperUserRequests.toPartReqDto(userRequest));
             }

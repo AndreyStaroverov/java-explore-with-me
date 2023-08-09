@@ -50,7 +50,7 @@ public class EventService {
         if (onlyAvailable != null) {
             if (onlyAvailable) {
                 for (Event event : events) {
-                        if (event.getConfirmedRequests() == event.getParticipantLimit()) {
+                        if (event.getConfirmedRequests().equals(event.getParticipantLimit())) {
                         events.remove(event);
                     }
                 }
