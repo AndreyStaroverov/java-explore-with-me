@@ -5,6 +5,7 @@ import org.springframework.stereotype.Service;
 import ru.practicum.HitDto;
 import ru.practicum.ViewStatsDto;
 import ru.practicum.dto.HitMapper;
+import ru.practicum.handler.BadRequestException;
 import ru.practicum.model.Hit;
 import ru.practicum.model.ViewStats;
 import ru.practicum.repository.HitRepository;
@@ -29,6 +30,9 @@ public class HitService {
     }
 
     public Collection<ViewStatsDto> getStats(String start, String end, String[] uris, Boolean unique) {
+        if (Timestamp.valueOf(start).after(Timestamp.valueOf(end))) {
+            throw new BadRequestException("Date start before Date end");
+        }
         if (uris == null) {
             return HitMapper.viewStatsDtoColl(emptyUris(start, end, unique));
         }
