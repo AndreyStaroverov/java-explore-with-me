@@ -31,13 +31,13 @@ public class HitMapper {
 
     public static Collection<ViewStatsDto> viewStatsDtoColl(Collection<ViewStats> viewStats) {
         Collection<ViewStatsDto> viewStatsDtos = new ArrayList<>();
-        for(ViewStats viewStat: viewStats) {
+        for (ViewStats viewStat : viewStats) {
             viewStatsDtos.add(
                     ViewStatsDto.builder()
-                    .app(viewStat.getApp())
-                    .hits(viewStat.getHits())
-                    .uri(viewStat.getUri())
-                    .build());
+                            .app(viewStat.getApp())
+                            .hits(viewStat.getHits())
+                            .uri(viewStat.getUri())
+                            .build());
         }
         return viewStatsDtos;
     }
