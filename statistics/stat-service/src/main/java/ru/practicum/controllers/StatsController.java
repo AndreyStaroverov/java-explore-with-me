@@ -6,7 +6,6 @@ import org.springframework.web.bind.annotation.*;
 import ru.practicum.HitDto;
 import ru.practicum.ViewStatsDto;
 import ru.practicum.model.Hit;
-import ru.practicum.model.ViewStats;
 import ru.practicum.service.HitService;
 
 import java.util.Collection;
