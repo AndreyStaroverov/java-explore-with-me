@@ -47,3 +47,12 @@ services:
   ewm-db:
     image: postgres:14-alpine
     container_name: ewm-db
+    volumes:
+      - "/etc/localtime:/etc/localtime:ro"
+      - "/etc/timezone:/etc/timezone:ro"
+    ports:
+      - "6542:5433"
+    environment:
+      - POSTGRES_DB=ewmmain
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=norman123
