@@ -8,12 +8,8 @@ import ru.practicum.model.User;
 
 import java.sql.Timestamp;
 import java.time.Instant;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
-import java.time.format.DateTimeFormatterBuilder;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Formatter;
 import java.util.List;
 
 public class MapperUserEvents {

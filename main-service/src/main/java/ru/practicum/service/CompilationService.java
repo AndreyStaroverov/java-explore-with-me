@@ -9,7 +9,6 @@ import ru.practicum.dto.compilation.MapperCompilation;
 import ru.practicum.handler.NotFoundException;
 import ru.practicum.repository.CompilationsRepository;
 
-import java.util.ArrayList;
 import java.util.Collection;
 
 @Service

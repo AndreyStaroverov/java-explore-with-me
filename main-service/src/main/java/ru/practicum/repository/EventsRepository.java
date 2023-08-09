@@ -37,21 +37,6 @@ public interface EventsRepository extends JpaRepository<Event, Long> {
                                       List<Long> categories,
                                       Pageable page);
 
-//    @Query("select e from Event e where " +
-////            "(cast(:text as varchar) IS NULL OR e.annotation LIKE lower(concat('%:text%'))) " +
-////            "AND :text IS NULL OR e.description like lower('%:text%') " +
-//            ":categories IS NULL OR e.category.id IN (:categories) " +
-//            "AND (cast(:paid as boolean) IS NULL OR e.paid = :paid) " +
-//            "AND (cast(:published as boolean) IS NULL OR e.state = :published)" +
-//            "AND (cast(:rangeStart as timestamp) IS NULL OR e.event_date > :rangeStart) " +
-//            "AND (cast(:rangeEnd as timestamp) IS NULL OR e.event_date < :rangeEnd) ")
-//    List<Event> getEventsByParametersForPublic(List<Long> categories,
-//                                               Boolean paid,
-//                                               String published,
-//                                               Timestamp rangeStart,
-//                                               Timestamp rangeEnd,
-//                                               Pageable page);
-
     @Query("select e from Event e where " +
             ":text IS NULL OR e.annotation LIKE :text " +
             "OR :text IS NULL OR e.description LIKE :text " +

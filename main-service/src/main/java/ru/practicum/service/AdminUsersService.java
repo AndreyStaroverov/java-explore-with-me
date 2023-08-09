@@ -1,7 +1,6 @@
 package ru.practicum.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Bean;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -11,10 +10,8 @@ import ru.practicum.dto.Users.MapperUsers;
 import ru.practicum.dto.Users.UserDto;
 import ru.practicum.handler.AlreadyExistEmailException;
 import ru.practicum.handler.NotFoundException;
-import ru.practicum.model.User;
 import ru.practicum.repository.UserRepository;
 
-import java.util.ArrayList;
 import java.util.Collection;
 
 @Service

@@ -25,7 +25,6 @@ import java.time.Instant;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Date;
 import java.util.List;
 
 @Service
@@ -52,11 +51,11 @@ public class AdminEventsService {
 
         List<Event> events = new ArrayList<>();
 
-        if(rangeStart != null && rangeEnd != null) {
+        if (rangeStart != null && rangeEnd != null) {
             events = eventsRepository.getEventsByParameters(userIds, states, categories,
                     rangeStart, rangeEnd, page);
         } else {
-             events = eventsRepository.getEventsByParameters(userIds, states, categories, page);
+            events = eventsRepository.getEventsByParameters(userIds, states, categories, page);
         }
         return MapperUserEvents.toEventFullColl(events);
     }

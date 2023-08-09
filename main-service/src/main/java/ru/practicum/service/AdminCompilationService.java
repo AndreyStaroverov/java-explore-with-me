@@ -33,12 +33,12 @@ public class AdminCompilationService {
         Compilation compilation = new Compilation();
         compilation.setTitle(newCompilationDto.getTitle());
         compilation.setPinned(false);
-        if(newCompilationDto.getPinned() != null) {
+        if (newCompilationDto.getPinned() != null) {
             compilation.setPinned(newCompilationDto.getPinned());
         }
-        if(newCompilationDto.getEvents() != null) {
+        if (newCompilationDto.getEvents() != null) {
             List<Event> events = new ArrayList<>();
-            for (Long eventId: newCompilationDto.getEvents()) {
+            for (Long eventId : newCompilationDto.getEvents()) {
                 events.add(eventsRepository.getReferenceById(eventId));
             }
             compilation.setEvents(events);
@@ -58,15 +58,15 @@ public class AdminCompilationService {
     public CompilationDto patchCompilation(Long compId, UpdateCompilationRequest updateCompilationRequest) {
         checkComp(compId);
         Compilation compilation = compilationsRepository.getReferenceById(compId);
-        if(updateCompilationRequest.getPinned() != null) {
+        if (updateCompilationRequest.getPinned() != null) {
             compilation.setPinned(updateCompilationRequest.getPinned());
         }
-        if(updateCompilationRequest.getTitle() != null) {
+        if (updateCompilationRequest.getTitle() != null) {
             compilation.setTitle(updateCompilationRequest.getTitle());
         }
-        if(updateCompilationRequest.getEvents() != null) {
+        if (updateCompilationRequest.getEvents() != null) {
             List<Event> events = new ArrayList<>();
-            for (Long ids: updateCompilationRequest.getEvents()) {
+            for (Long ids : updateCompilationRequest.getEvents()) {
                 events.add(eventsRepository.getReferenceById(ids));
             }
             compilation.setEvents(events);
@@ -75,7 +75,7 @@ public class AdminCompilationService {
     }
 
     public void checkComp(Long compId) {
-        if(!compilationsRepository.existsById(compId)){
+        if (!compilationsRepository.existsById(compId)) {
             throw new NotFoundException(String.format("Compilation with id=%s was not found", compId));
         }
     }

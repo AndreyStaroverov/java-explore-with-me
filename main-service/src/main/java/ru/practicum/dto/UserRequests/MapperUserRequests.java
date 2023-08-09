@@ -10,7 +10,7 @@ public class MapperUserRequests {
 
     public static Collection<UserRequestDto> collectionUserRequestToDto(Collection<UserRequest> userRequests) {
         Collection<UserRequestDto> userRequestDtos = new ArrayList<>();
-        for (UserRequest userRequest: userRequests) {
+        for (UserRequest userRequest : userRequests) {
             userRequestDtos.add(new UserRequestDto(
                     userRequest.getCreated(),
                     userRequest.getEvent().getId(),
@@ -34,7 +34,7 @@ public class MapperUserRequests {
 
     public static Collection<ParticipationRequestDto> toPartReqDtoColl(Collection<UserRequest> userRequests) {
         Collection<ParticipationRequestDto> userRequestDtos = new ArrayList<>();
-        for (UserRequest userRequest: userRequests) {
+        for (UserRequest userRequest : userRequests) {
             userRequestDtos.add(ParticipationRequestDto.builder()
                     .id(userRequest.getId())
                     .created(userRequest.getCreated())

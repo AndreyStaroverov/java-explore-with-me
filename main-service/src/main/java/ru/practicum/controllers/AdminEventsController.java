@@ -11,7 +11,6 @@ import ru.practicum.service.AdminEventsService;
 import javax.validation.Valid;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.Positive;
-import javax.validation.constraints.PositiveOrZero;
 import java.sql.Timestamp;
 import java.util.Collection;
 import java.util.List;

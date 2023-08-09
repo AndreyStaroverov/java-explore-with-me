@@ -4,7 +4,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import ru.practicum.model.UserRequest;
 
-import javax.validation.constraints.NotNull;
 import java.util.List;
 
 public interface UserRequestRepository extends JpaRepository<UserRequest, Long> {

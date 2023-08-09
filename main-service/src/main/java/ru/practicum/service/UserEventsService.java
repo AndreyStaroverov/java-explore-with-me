@@ -42,8 +42,8 @@ public class UserEventsService {
 
     @Transactional(isolation = Isolation.READ_COMMITTED, readOnly = true)
     public Collection<EventShortDtoGet> getEvents(Long userId, Long from, Long size) {
-            Pageable page = PageRequest.of(Math.toIntExact(from / size), Math.toIntExact(size));
-            return MapperUserEvents.toEventShortDtoGetColl(eventsRepository.findAllByInitiator_id(userId, page).toList());
+        Pageable page = PageRequest.of(Math.toIntExact(from / size), Math.toIntExact(size));
+        return MapperUserEvents.toEventShortDtoGetColl(eventsRepository.findAllByInitiator_id(userId, page).toList());
     }
 
     @Transactional(isolation = Isolation.READ_COMMITTED)
@@ -54,16 +54,16 @@ public class UserEventsService {
         if (!Timestamp.valueOf(newEventDto.getEventDate()).after(Timestamp.from(Instant.now()))) {
             throw new BadRequestDate("Date is before now");
         }
-        if(newEventDto.getLocation() != null) {
+        if (newEventDto.getLocation() != null) {
             newEventDto.setLocation(locationRepository.save(newEventDto.getLocation()));
         }
-        if(newEventDto.getRequestModeration() == null) {
+        if (newEventDto.getRequestModeration() == null) {
             newEventDto.setRequestModeration(true);
         }
-        if(newEventDto.getParticipantLimit() == null) {
+        if (newEventDto.getParticipantLimit() == null) {
             newEventDto.setParticipantLimit(0);
         }
-        if(newEventDto.getPaid() == null) {
+        if (newEventDto.getPaid() == null) {
             newEventDto.setPaid(false);
         }
         return MapperUserEvents.toEventFullPost(eventsRepository.save(MapperUserEvents.toEventFromNewEvDto(newEventDto,
@@ -73,7 +73,7 @@ public class UserEventsService {
     @Transactional(isolation = Isolation.READ_COMMITTED, readOnly = true)
     public EventDto getEventById(Long userId, Long eventId) {
         checkEventAndUser(eventId, userId);
-        if(eventsRepository.getReferenceById(eventId).getInitiator().getId() != userId) {
+        if (eventsRepository.getReferenceById(eventId).getInitiator().getId() != userId) {
             throw new NotFoundException("Not your event");
         }
         return MapperUserEvents.toEventFull(eventsRepository.getReferenceById(eventId));
@@ -85,7 +85,7 @@ public class UserEventsService {
         if (eventsRepository.getReferenceById(eventId).getState().equals(EventStates.PUBLISHED.toString())) {
             throw new ConflictStateException("Status is PUBLISHED you can't update");
         }
-        if(eventsRepository.getReferenceById(eventId).getInitiator().getId() != userId) {
+        if (eventsRepository.getReferenceById(eventId).getInitiator().getId() != userId) {
             throw new NotFoundException(String.format("This event id=%s cant be patch by id=%s", eventId, userId));
         }
 
@@ -143,11 +143,11 @@ public class UserEventsService {
     public EventRequestStatusUpdateResult patchEventRequests(Long userId, Long eventId,
                                                              EventRequestStatusUpdateRequest eventRequestStatusUpdateRequest) {
         checkEventAndUser(eventId, userId);
-        if(eventsRepository.getReferenceById(eventId).getRequestModeration().equals(false) ||
+        if (eventsRepository.getReferenceById(eventId).getRequestModeration().equals(false) ||
                 eventsRepository.getReferenceById(eventId).getPart_limit().equals(0L)) {
             throw new BadRequestDate("Подтверждение не требуется");
         }
-        if(eventsRepository.getReferenceById(eventId).getConf_req() == eventsRepository.getReferenceById(eventId).getPart_limit()) {
+        if (eventsRepository.getReferenceById(eventId).getConf_req() == eventsRepository.getReferenceById(eventId).getPart_limit()) {
             throw new ConflictStateException("The participant limit has been reached");
         }
 
@@ -161,11 +161,11 @@ public class UserEventsService {
         Long confReq = eventsRepository.getReferenceById(eventId).getConf_req();
         List<UserRequest> userRequests = userRequestRepository.findAllById(eventRequestStatusUpdateRequest.getRequestIds());
 
-        for (UserRequest userRequest: userRequests) {
+        for (UserRequest userRequest : userRequests) {
             if (!userRequest.getStatus().equals(EventStates.PENDING.toString())) {
                 throw new ConflictStateException("Only request with PENDING status can be changed");
             }
-            if(confReq == partLimit) {
+            if (confReq == partLimit) {
                 userRequest.setStatus(RequestStates.REJECTED.toString());
                 updateResult.getRejectedRequests().add(MapperUserRequests.toPartReqDto(userRequest));
             }
@@ -179,7 +179,7 @@ public class UserEventsService {
                 confReq = confReq + 1;
             }
         }
-        Event event =  eventsRepository.getReferenceById(eventId);
+        Event event = eventsRepository.getReferenceById(eventId);
         event.setConf_req(confReq);
         eventsRepository.save(event);
         userRequestRepository.saveAll(userRequests);

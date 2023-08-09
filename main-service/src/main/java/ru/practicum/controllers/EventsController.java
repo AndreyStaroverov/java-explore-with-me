@@ -5,19 +5,15 @@ import org.springframework.http.HttpStatus;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
-import ru.practicum.HitDto;
 import ru.practicum.StatClient;
 import ru.practicum.dto.events.EventDto;
 import ru.practicum.dto.events.EventShortDto;
 import ru.practicum.service.EventService;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.validation.constraints.FutureOrPresent;
 import javax.validation.constraints.Positive;
 import javax.validation.constraints.PositiveOrZero;
 import java.sql.Timestamp;
-import java.time.Instant;
-import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.List;
 
