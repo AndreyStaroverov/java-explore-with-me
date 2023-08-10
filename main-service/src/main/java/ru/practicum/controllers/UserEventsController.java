@@ -27,10 +27,10 @@ public class UserEventsController {
     @GetMapping("/{userId}/events")
     @ResponseStatus(HttpStatus.OK)
     public Collection<EventShortDtoGet> getEvents(@PathVariable @Valid @Positive Long userId,
-                                               @RequestParam(value = "from", required = false, defaultValue = "0")
-                                               @Valid @Min(0) Long from,
-                                               @RequestParam(value = "size", required = false, defaultValue = "10")
-                                               @Valid @Min(0) Long size) {
+                                                  @RequestParam(value = "from", defaultValue = "0")
+                                                  @Valid @Min(0) Long from,
+                                                  @RequestParam(value = "size", defaultValue = "10")
+                                                  @Valid @Min(1) Long size) {
         return userEventsService.getEvents(userId, from, size);
     }
 

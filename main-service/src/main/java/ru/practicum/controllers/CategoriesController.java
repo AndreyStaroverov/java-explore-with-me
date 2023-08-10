@@ -24,10 +24,8 @@ public class CategoriesController {
 
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
-    public Collection<CategoryDto> getCategories(@RequestParam(name = "from", required = false, defaultValue = "0")
-                                                 @Min(0) Long from,
-                                                 @RequestParam(name = "size", required = false, defaultValue = "10")
-                                                 @Min(1) Long size) {
+    public Collection<CategoryDto> getCategories(@RequestParam(name = "from", defaultValue = "0") @Min(0) Long from,
+                                                 @RequestParam(name = "size", defaultValue = "10") @Min(1) Long size) {
         return categoriesService.getCategories(from, size);
     }
 

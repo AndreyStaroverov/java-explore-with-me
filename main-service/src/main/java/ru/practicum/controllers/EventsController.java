@@ -11,8 +11,8 @@ import ru.practicum.dto.events.EventShortDto;
 import ru.practicum.service.EventService;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.validation.constraints.Min;
 import javax.validation.constraints.Positive;
-import javax.validation.constraints.PositiveOrZero;
 import java.sql.Timestamp;
 import java.time.Instant;
 import java.util.Collection;
@@ -25,6 +25,7 @@ public class EventsController {
 
     private final EventService eventService;
     private final StatClient statClient;
+    private static final String SERVICE_NAME = "main-service";
 
     public EventsController(@Autowired EventService eventService, StatClient statClient) {
         this.eventService = eventService;
@@ -38,17 +39,14 @@ public class EventsController {
                                                @RequestParam(name = "paid", required = false) Boolean paid,
                                                @RequestParam(name = "rangeStart", required = false) Timestamp rangeStart,
                                                @RequestParam(name = "rangeEnd", required = false) Timestamp rangeEnd,
-                                               @RequestParam(name = "onlyAvailable", required = false, defaultValue = "false")
+                                               @RequestParam(name = "onlyAvailable", defaultValue = "false")
                                                Boolean onlyAvailable,
                                                @RequestParam(name = "sort", required = false) String sort,
-                                               @RequestParam(name = "from", required = false, defaultValue = "0")
-                                               @PositiveOrZero Long from,
-                                               @RequestParam(name = "size", required = false, defaultValue = "10")
-                                               @Positive Long size,
+                                               @RequestParam(name = "from", defaultValue = "0") @Min(0) Long from,
+                                               @RequestParam(name = "size", defaultValue = "10") @Min(1) Long size,
                                                HttpServletRequest request) {
-
         statClient.saveHit(HitDto.builder()
-                .app("main-service")
+                .app(SERVICE_NAME)
                 .uri(request.getRequestURI())
                 .ip(request.getRemoteAddr())
                 .timestamp(Timestamp.from(Instant.now()).toString())
@@ -58,10 +56,9 @@ public class EventsController {
 
     @GetMapping("/{eventId}")
     @ResponseStatus(HttpStatus.OK)
-    public EventDto getEventsById(@PathVariable @Positive Long eventId,
-                                  HttpServletRequest request) {
+    public EventDto getEventsById(@PathVariable @Positive Long eventId, HttpServletRequest request) {
         statClient.saveHit(HitDto.builder()
-                .app("main-service")
+                .app(SERVICE_NAME)
                 .uri(request.getRequestURI())
                 .ip(request.getRemoteAddr())
                 .timestamp(Timestamp.from(Instant.now()).toString())

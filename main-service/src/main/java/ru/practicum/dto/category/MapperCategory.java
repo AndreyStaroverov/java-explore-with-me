@@ -5,7 +5,10 @@ import ru.practicum.model.Category;
 import java.util.ArrayList;
 import java.util.Collection;
 
-public class MapperCategory {
+public final class MapperCategory {
+
+    private MapperCategory() {
+    }
 
     public static Category toCategory(NewCategoryDto newCategoryDto) {
         return Category.builder()

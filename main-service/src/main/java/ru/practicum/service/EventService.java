@@ -40,7 +40,7 @@ public class EventService {
     public Collection<EventShortDto> getEvents(String text, List<Long> categories, Boolean paid,
                                                Timestamp rangeStart, Timestamp rangeEnd, Boolean onlyAvailable,
                                                String sort, Long from, Long size) {
-        if (categories.contains(0L)) {
+        if (categories != null && categories.contains(0L)) {
             throw new BadRequestDate("Categories is Bad");
         }
         Pageable page = PageRequest.of(Math.toIntExact(from / size), Math.toIntExact(size));

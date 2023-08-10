@@ -5,7 +5,10 @@ import ru.practicum.model.User;
 import java.util.ArrayList;
 import java.util.Collection;
 
-public class MapperUsers {
+public final class MapperUsers {
+
+    private MapperUsers() {
+    }
 
     public static User dtoToUser(UserDto userDto) {
         return new User(

@@ -12,7 +12,10 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-public class MapperUserEvents {
+public final class MapperUserEvents {
+
+    private MapperUserEvents() {
+    }
 
     public static EventShortDto toEventShortDto(Event event, Long views) {
         String date = event.getEventDate().toLocalDateTime().toString().replace("T", " ");

@@ -6,7 +6,10 @@ import ru.practicum.model.Compilation;
 import java.util.ArrayList;
 import java.util.Collection;
 
-public class MapperCompilation {
+public final class MapperCompilation {
+
+    private MapperCompilation() {
+    }
 
     public static CompilationDto toCompilationDto(Compilation compilation) {
         return CompilationDto.builder()

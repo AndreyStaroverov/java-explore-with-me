@@ -6,7 +6,10 @@ import ru.practicum.model.UserRequest;
 import java.util.ArrayList;
 import java.util.Collection;
 
-public class MapperUserRequests {
+public final class MapperUserRequests {
+
+    private MapperUserRequests() {
+    }
 
     public static Collection<UserRequestDto> collectionUserRequestToDto(Collection<UserRequest> userRequests) {
         Collection<UserRequestDto> userRequestDtos = new ArrayList<>();

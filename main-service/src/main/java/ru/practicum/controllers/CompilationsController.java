@@ -25,10 +25,8 @@ public class CompilationsController {
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
     public Collection<CompilationDto> getCompilation(@RequestParam(name = "pinned", required = false) Boolean pinned,
-                                                     @RequestParam(name = "from", required = false, defaultValue = "0")
-                                                     @Min(0) Long from,
-                                                     @RequestParam(name = "size", required = false, defaultValue = "10")
-                                                     @Min(1) Long size) {
+                                                     @RequestParam(name = "from", defaultValue = "0") @Min(0) Long from,
+                                                     @RequestParam(name = "size", defaultValue = "10") @Min(1) Long size) {
         return compilationService.getCompilations(pinned, from, size);
     }
 

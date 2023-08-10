@@ -14,9 +14,9 @@ public interface EventsRepository extends JpaRepository<Event, Long> {
     Page<Event> findAllByInitiator_id(Long initiatorId, Pageable pageable);
 
     @Query("select e from Event e where " +
-            ":users IS NULL OR e.initiator.id IN (:users) " +
-            "AND :states IS NULL OR  e.state IN (:states) " +
-            "AND :categories IS NULL OR e.category.id IN (:categories) " +
+            "(COALESCE(:users, NULL) IS NULL OR e.initiator.id IN (:users)) " +
+            "AND (COALESCE(:states, NULL) IS NULL OR  e.state IN (:states)) " +
+            "AND (COALESCE(:categories, NULL) IS NULL OR e.category.id IN (:categories)) " +
             "AND (cast(:rangeStart as timestamp) IS NULL OR e.eventDate > :rangeStart) " +
             "AND (cast(:rangeEnd as timestamp) IS NULL OR e.eventDate < :rangeEnd) ")
     List<Event> getEventsByParameters(List<Long> users,
@@ -27,9 +27,9 @@ public interface EventsRepository extends JpaRepository<Event, Long> {
                                       Pageable page);
 
     @Query("select e from Event e where " +
-            ":users IS NULL OR e.initiator.id IN (:users) " +
-            "AND :states IS NULL OR  e.state IN (:states) " +
-            "AND :categories IS NULL OR e.category.id IN (:categories) ")
+            "(COALESCE(:users, NULL) IS NULL OR e.initiator.id IN (:users)) " +
+            "AND (COALESCE(:states, NULL) IS NULL OR  e.state IN (:states)) " +
+            "AND (COALESCE(:categories, NULL) IS NULL OR e.category.id IN (:categories)) ")
     List<Event> getEventsByParameters(List<Long> users,
                                       List<String> states,
                                       List<Long> categories,
@@ -38,7 +38,7 @@ public interface EventsRepository extends JpaRepository<Event, Long> {
     @Query("select e from Event e where " +
             ":text IS NULL OR e.annotation LIKE :text " +
             "OR :text IS NULL OR e.description LIKE :text " +
-            "AND :categories IS NULL OR e.category.id IN (:categories) " +
+            "AND (COALESCE(:categories, NULL) IS NULL OR e.category.id IN (:categories)) " +
             "AND (cast(:paid as boolean) IS NULL OR e.paid = :paid) " +
             "AND e.state LIKE :published " +
             "AND (cast(:rangeStart as timestamp) IS NULL OR e.eventDate > :rangeStart) " +

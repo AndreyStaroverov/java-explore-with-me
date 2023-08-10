@@ -8,7 +8,6 @@ import ru.practicum.dto.UserRequests.UserRequestDto;
 import ru.practicum.dto.events.ParticipationRequestDto;
 import ru.practicum.service.UserRequestsService;
 
-import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Positive;
 import java.util.Collection;
 
@@ -32,8 +31,8 @@ public class UserRequestsController {
 
     @PostMapping("{userId}/requests")
     @ResponseStatus(HttpStatus.CREATED)
-    public ParticipationRequestDto postRequest(@PathVariable Long userId,
-                                               @RequestParam(name = "eventId", required = true) @NotNull Long eventId) {
+    public ParticipationRequestDto postRequest(@PathVariable @Positive Long userId,
+                                               @RequestParam(name = "eventId", required = true) @Positive Long eventId) {
         return userRequestsService.postRequest(userId, eventId);
     }
 

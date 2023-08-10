@@ -15,7 +15,6 @@ import java.util.Collection;
 @RestController
 @RequestMapping(path = "/admin/users")
 @Validated
-//@RequiredArgsConstructor(onConstructor = @__(@Autowired))
 public class AdminUsersController {
 
     private final AdminUsersService adminUsersService;
@@ -27,10 +26,8 @@ public class AdminUsersController {
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
     public Collection<UserDto> getUsers(@RequestParam(name = "ids", required = false) Collection<Long> ids,
-                                        @RequestParam(value = "from", required = false, defaultValue = "0")
-                                        @Valid @Min(0) Long from,
-                                        @RequestParam(value = "size", required = false, defaultValue = "10")
-                                        @Valid @Min(0) Long size) {
+                                        @RequestParam(value = "from", defaultValue = "0") @Valid @Min(0) Long from,
+                                        @RequestParam(value = "size", defaultValue = "10") @Valid @Min(1) Long size) {
         return adminUsersService.getUsers(ids, from, size);
     }
 
