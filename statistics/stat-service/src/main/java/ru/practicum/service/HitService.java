@@ -3,7 +3,9 @@ package ru.practicum.service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ru.practicum.HitDto;
+import ru.practicum.ViewStatsDto;
 import ru.practicum.dto.HitMapper;
+import ru.practicum.handler.BadRequestException;
 import ru.practicum.model.Hit;
 import ru.practicum.model.ViewStats;
 import ru.practicum.repository.HitRepository;
@@ -27,14 +29,17 @@ public class HitService {
         return hitRepository.save(HitMapper.dtoToHit(hit));
     }
 
-    public Collection<ViewStats> getStats(String start, String end, Collection<String> uris, Boolean unique) {
+    public Collection<ViewStatsDto> getStats(String start, String end, String[] uris, Boolean unique) {
+        if (Timestamp.valueOf(start).after(Timestamp.valueOf(end))) {
+            throw new BadRequestException("Date start before Date end");
+        }
         if (uris == null) {
-            return emptyUris(start, end, unique);
+            return HitMapper.viewStatsDtoColl(emptyUris(start, end, unique));
         }
         if (unique) {
-            return uniqueStats(start, end, uris, unique);
+            return HitMapper.viewStatsDtoColl(uniqueStats(start, end, uris, unique));
         }
-        return notUniqueStats(start, end, uris, unique);
+        return HitMapper.viewStatsDtoColl(notUniqueStats(start, end, uris, unique));
 
     }
 
@@ -53,7 +58,7 @@ public class HitService {
                 .collect(Collectors.toList());
     }
 
-    public Collection<ViewStats> uniqueStats(String start, String end, Collection<String> uris, Boolean unique) {
+    public Collection<ViewStats> uniqueStats(String start, String end, String[] uris, Boolean unique) {
         Collection<ViewStats> viewStats = new ArrayList<>();
         for (String uri : uris) {
             viewStats.add(new ViewStats(
@@ -67,7 +72,7 @@ public class HitService {
                 .collect(Collectors.toList());
     }
 
-    public Collection<ViewStats> notUniqueStats(String start, String end, Collection<String> uris, Boolean unique) {
+    public Collection<ViewStats> notUniqueStats(String start, String end, String[] uris, Boolean unique) {
         Collection<ViewStats> viewStats = new ArrayList<>();
         for (String uri : uris) {
             viewStats.add(new ViewStats(

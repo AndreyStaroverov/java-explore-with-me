@@ -4,8 +4,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import ru.practicum.HitDto;
+import ru.practicum.ViewStatsDto;
 import ru.practicum.model.Hit;
-import ru.practicum.model.ViewStats;
 import ru.practicum.service.HitService;
 
 import java.util.Collection;
@@ -27,10 +27,10 @@ public class StatsController {
 
     @GetMapping("/stats")
     @ResponseStatus(HttpStatus.OK)
-    public Collection<ViewStats> getStats(@RequestParam(value = "start", required = true) String start,
-                                          @RequestParam(value = "end", required = true) String end,
-                                          @RequestParam(value = "uris", required = false) Collection<String> uris,
-                                          @RequestParam(value = "unique", required = false, defaultValue = "false") Boolean unique) {
+    public Collection<ViewStatsDto> getStats(@RequestParam(value = "start", required = true) String start,
+                                             @RequestParam(value = "end", required = true) String end,
+                                             @RequestParam(value = "uris", required = false) String[] uris,
+                                             @RequestParam(value = "unique", required = false, defaultValue = "false") Boolean unique) {
         return hitService.getStats(start, end, uris, unique);
     }
 

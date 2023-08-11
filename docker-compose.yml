@@ -1,4 +1,4 @@
-version: '3.1'
+version: '3.8'
 services:
   stats-server:
     build: statistics/stat-service
@@ -37,7 +37,7 @@ services:
     depends_on:
       - ewm-db
     environment:
-      - SPRING_DATASOURCE_URL=jdbc:postgresql://ewm-db:5433/ewmmain
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://ewm-db:5432/ewmmain
       - SPRING_DATASOURCE_USERNAME=postgres
       - SPRING_DATASOURCE_PASSWORD=norman123
     volumes:
@@ -51,7 +51,7 @@ services:
       - "/etc/localtime:/etc/localtime:ro"
       - "/etc/timezone:/etc/timezone:ro"
     ports:
-      - "6542:5433"
+      - "6542:5432"
     environment:
       - POSTGRES_DB=ewmmain
       - POSTGRES_USER=postgres
