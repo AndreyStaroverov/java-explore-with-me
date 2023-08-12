@@ -21,32 +21,34 @@ public class AdminCommentService {
     private final UserRepository userRepository;
     private final EventsRepository eventsRepository;
     private final CommentsCheck commentsCheck;
+    private final MapperComments mapperComments;
 
     public AdminCommentService(@Autowired CommentRepository commentRepository, UserRepository userRepository,
-                               EventsRepository eventsRepository, CommentsCheck commentsCheck) {
+                               EventsRepository eventsRepository, CommentsCheck commentsCheck, MapperComments mapperComments) {
         this.commentRepository = commentRepository;
         this.userRepository = userRepository;
         this.eventsRepository = eventsRepository;
         this.commentsCheck = commentsCheck;
+        this.mapperComments = mapperComments;
     }
 
     @Transactional(isolation = Isolation.READ_COMMITTED, readOnly = true)
     public CommentDto getCommentById(Long comId) {
         commentsCheck.checkCom(comId);
-        return MapperComments.commentDtoFromComment(commentRepository.getReferenceById(comId));
+        return mapperComments.commentDtoFromComment(commentRepository.getReferenceById(comId));
     }
 
     @Transactional(isolation = Isolation.READ_COMMITTED, readOnly = true)
     public Collection<CommentDto> getCommentsByUserId(Long userId) {
         commentsCheck.checkUser(userId);
-        return MapperComments.commentDtoFromCommentColl(commentRepository.findAllByUserId(userId));
+        return mapperComments.commentDtoFromCommentColl(commentRepository.findAllByUserId(userId));
     }
 
     @Transactional(isolation = Isolation.READ_COMMITTED)
     public CommentDto postComment(NewCommentDtoAdmin newCommentDto) {
         commentsCheck.checkUser(newCommentDto.getUser());
         commentsCheck.checkEvent(newCommentDto.getEvent());
-        return MapperComments.commentDtoFromComment(commentRepository.save(Comment.builder()
+        return mapperComments.commentDtoFromComment(commentRepository.save(Comment.builder()
                 .user(userRepository.getReferenceById(newCommentDto.getUser()))
                 .text(newCommentDto.getText())
                 .event(eventsRepository.getReferenceById(newCommentDto.getEvent()))
@@ -65,6 +67,6 @@ public class AdminCommentService {
         commentsCheck.checkCom(comId);
         Comment comment = commentRepository.getReferenceById(comId);
         comment.setText(newCommentDto.getText());
-        return MapperComments.commentDtoFromComment(commentRepository.save(comment));
+        return mapperComments.commentDtoFromComment(commentRepository.save(comment));
     }
 }
