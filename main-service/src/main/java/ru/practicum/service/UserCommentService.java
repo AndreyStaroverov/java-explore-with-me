@@ -14,7 +14,6 @@ import ru.practicum.repository.CommentRepository;
 import ru.practicum.repository.EventsRepository;
 import ru.practicum.repository.UserRepository;
 
-import javax.validation.constraints.Positive;
 import java.sql.Timestamp;
 import java.time.Instant;
 import java.util.Collection;
