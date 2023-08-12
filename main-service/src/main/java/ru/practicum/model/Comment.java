@@ -32,7 +32,7 @@ public class Comment {
     private User user;
     @NotBlank
     @Size(min = 1, max = 450)
-    @Column(name = "text", nullable = false)
+    @Column(name = "message", nullable = false)
     private String text;
     @NotNull
     private Timestamp created;
