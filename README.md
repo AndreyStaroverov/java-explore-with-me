@@ -5,7 +5,7 @@ ExploreWithMe project.
 
 Стек: Java 11, Maven, Docker, SpringFramework
 
-![База данных проекта](java-explore-with-me/ewmmain/public.png)
+![База данных проекта](java-explore-with-me/ewmmainpic.png)
 
 Планы по развитию: 
 - Добавить возможность лайкать события
