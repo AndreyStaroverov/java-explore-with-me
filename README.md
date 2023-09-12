@@ -5,6 +5,7 @@ ExploreWithMe project.
 
 Стек: Java 11, Maven, Docker, SpringFramework
 
+База данных проекта:
 ![База данных проекта](https://github.com/AndreyStaroverov/java-explore-with-me/blob/28c2f09ab3ad323e549d15657552e6a73663b4ab/ewmmainpic.png)
 
 Планы по развитию: 
